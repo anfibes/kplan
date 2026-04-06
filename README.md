@@ -166,10 +166,11 @@ python -m scripts.omelette_graphviz --png
 ```
 
 Outputs:
-	•	.dot files (Graphviz source)
-	•	.png images (rendered graphs)
 
-Project structure
+- `.dot` files (Graphviz source)
+- `.png` images (rendered graphs)
+
+## Project structure
 
 ```text
 kplan/
@@ -207,9 +208,9 @@ kplan/
 └── docs/
 ```
 
-Running the project
+## Running the project
 
-Install dependencies
+### Install dependencies
 
 ```bash
 python -m venv .venv
