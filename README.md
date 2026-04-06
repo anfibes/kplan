@@ -211,19 +211,26 @@ Running the project
 
 Install dependencies
 
+```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
+```
 
 Run tests
 
+```bash
 pytest
+```
 
 Static analysis
 
+```bash
 mypy .
 ruff check .
+```
 
+```text
 Current status
 	•	✅ Generic domain modeling
 	•	✅ k-plan solver
@@ -234,15 +241,18 @@ Current status
 	•	✅ Graph visualization (Graphviz)
 	•	✅ Policy-only graph extraction
 	•	✅ Full test suite
+```
 
 Roadmap
 
+```text
 Planned extensions:
 	•	richer domains
 	•	heuristic guidance
 	•	interactive visualization
 	•	probabilistic evaluation layer
 	•	performance optimizations
+```
 
 Background
 
