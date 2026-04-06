@@ -165,6 +165,7 @@ Example:
 python -m scripts.omelette_graphviz --png
 ```
 
+```text
 Outputs:
 	•	.dot files (Graphviz source)
 	•	.png images (rendered graphs)
@@ -204,6 +205,7 @@ kplan/
 ├── tests/
 │
 └── docs/
+```
 
 Running the project
 
