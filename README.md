@@ -163,6 +163,7 @@ Example:
 
 ```bash
 python -m scripts.omelette_graphviz --png
+```
 
 Outputs:
 	•	.dot files (Graphviz source)
