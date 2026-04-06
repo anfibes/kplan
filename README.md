@@ -161,8 +161,9 @@ Outputs:
 
 ⸻
 
-Project Structure
+## Project Structure
 
+```text
 kplan/
 ├── core/
 │   ├── state.py
@@ -179,7 +180,7 @@ kplan/
 │   ├── rover/
 │   └── omelette/
 │
-├──	visualization/
+├── visualization/
 │   ├── graphviz_exporter.py
 │   └── profiles/
 │       └── omelette_profile.py
@@ -195,7 +196,7 @@ kplan/
 ├── tests/
 │
 └── docs/
-
+```
 
 ⸻
 
