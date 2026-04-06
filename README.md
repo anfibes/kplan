@@ -165,13 +165,13 @@ Example:
 python -m scripts.omelette_graphviz --png
 ```
 
-```text
 Outputs:
 	•	.dot files (Graphviz source)
 	•	.png images (rendered graphs)
 
 Project structure
 
+```text
 kplan/
 ├── core/
 │   ├── state.py
