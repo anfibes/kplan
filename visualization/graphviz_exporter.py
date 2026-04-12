@@ -82,6 +82,7 @@ class GraphvizExporter(Generic[StateT, ActionT]):
             is_dead_end = k_value == -1
 
             label = self._format_state_label(
+                solver=solver,
                 state=state,
                 k_value=k_value,
                 is_goal=is_goal,
@@ -263,16 +264,19 @@ class GraphvizExporter(Generic[StateT, ActionT]):
 
     def _format_state_label(
         self,
+        solver: KPlanSolver[StateT, ActionT],
         state: StateT,
         k_value: int,
         is_goal: bool,
     ) -> str:
         state_repr = self._profile.state_repr(state)
+        goal_distance = solver.goal_distance_of(state)
+        distance_label = "∞" if goal_distance is None else str(goal_distance)
 
         if is_goal:
-            return f"{state_repr}\\nGOAL\\nk=∞"
+            return f"{state_repr}\\nGOAL\\nk=∞\\nd={distance_label}"
 
-        return f"{state_repr}\\nk={k_value}"
+        return f"{state_repr}\\nk={k_value}\\nd={distance_label}"
 
     def _node_attributes(
         self,

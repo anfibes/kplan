@@ -50,7 +50,7 @@ Main goals:
     • preserve the current architecture of kplan
 
 This is part of the long-term goal of evaluating kplan on standard FOND-style
-benchmarks and positioning the project for academic publication.  [oai_citation:1‡pddl-integration.md](sediment://file_0000000013b87243b0e63fb8f2b8b5ec)
+benchmarks and positioning the project for academic publication.
 
 ⸻
 
