@@ -189,6 +189,12 @@ kplan/
 │   ├── rover/
 │   └── omelette/
 │
+├── kplan_io/
+│   └── pddl/
+│       ├── ast.py
+│       ├── parser.py
+│       └── errors.py
+│
 ├── visualization/
 │   ├── graphviz_exporter.py
 │   ├── profile.py
@@ -207,6 +213,39 @@ kplan/
 │
 └── docs/
 ```
+
+## PDDL support (experimental)
+
+The project includes an experimental PDDL-FOND parsing layer.
+
+This module allows loading domains and problems written in PDDL,
+using a strict internal representation aligned with kplan’s semantics.
+
+Key characteristics:
+
+- strict separation between external parser and internal AST
+- deterministic normalization of effects (all actions become `oneof`)
+- explicit rejection of unsupported PDDL features
+- no external types leak into the core system
+
+Current scope:
+
+- parsing and validation of a restricted PDDL subset
+- support for:
+  - typing
+  - negative preconditions
+  - non-deterministic effects (`oneof`)
+- normalization of effects into a unified internal structure
+
+Not implemented yet:
+
+- grounding (ActionSchema → GroundAction)
+- direct execution via CLI
+- integration with solver (planned next steps)
+
+See:
+
+- `docs/pddl-integration.md` for full technical details
 
 ## Running the project
 
