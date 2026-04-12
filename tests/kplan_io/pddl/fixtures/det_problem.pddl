@@ -1,0 +1,5 @@
+(define (problem det-toy-1)
+  (:domain det-toy)
+  (:objects a b - block)
+  (:init (clear a) (clear b) (handempty))
+  (:goal (and (holding a))))

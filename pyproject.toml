@@ -1,3 +1,12 @@
+[project]
+name = "kplan"
+version = "0.1.0"
+description = "Robust planning engine for non-deterministic domains under bounded adversarial failure budgets."
+requires-python = ">=3.12"
+dependencies = [
+    "pddl>=0.4.7,<0.5",
+]
+
 [tool.black]
 line-length = 100
 

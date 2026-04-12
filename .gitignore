@@ -10,3 +10,4 @@ outputs/dot/
 outputs/images/*
 !outputs/images/omelette_eggs3_goal2_req2_init0_policy_only.png
 !outputs/images/omelette_eggs4_goal2_req2_init1_policy_only.png
+CLAUDE.md
