@@ -1,17 +1,39 @@
-"""PDDL-FOND I/O for kplan.
+"""
+Public API for the PDDL integration layer of kplan.
 
-This package translates PDDL-FOND files into kplan's internal representation.
-The external ``pddl`` PyPI package is the parser backend, but it is strictly
-confined to :mod:`kplan_io.pddl.parser` — no other module imports from
-``pddl.*``.
+The module provides a validated and grounded PDDL front-end that can be
+used directly with the solver through the PDDLProblem adapter.
 
-Public API for milestone 1A is intentionally limited to the parser layer:
+Current capabilities:
 
-* :func:`kplan_io.pddl.parser.parse_domain`
-* :func:`kplan_io.pddl.parser.parse_problem`
+- parsing PDDL domain files
+- parsing PDDL problem files
+- validation of a restricted PDDL subset
+- conversion to an internal AST independent of the external parser
+- eager grounding of ActionSchema into GroundAction
+- validation of grounded actions and initial state
+- integration with the solver via PDDLProblem
 
-Grounding and the :class:`core.problem.Problem` adapter come in later
-milestones.
+Architecture:
+
+    PDDL files
+        ↓
+    parser.py → internal AST
+        ↓
+    grounder.py → grounded actions + initial state
+        ↓
+    problem.py → PDDLProblem (core.problem.Problem adapter)
+        ↓
+    KPlanSolver
+
+The module enforces a strict boundary with the external `pddl` package:
+no external types are exposed outside the parser layer.
+
+Limitations:
+
+- only a restricted subset of PDDL is supported
+- no CLI interface yet
+- no advanced optimizations (lazy grounding, indexing, etc.)
 """
 
 from kplan_io.pddl.errors import (
@@ -20,9 +42,11 @@ from kplan_io.pddl.errors import (
     PddlParseError,
     UnsupportedPddlFeatureError,
 )
+from kplan_io.pddl.problem import PDDLProblem
 
 __all__ = [
     "GroundingError",
+    "PDDLProblem",
     "PddlError",
     "PddlParseError",
     "UnsupportedPddlFeatureError",

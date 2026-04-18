@@ -193,6 +193,7 @@ kplan/
 │   └── pddl/
 │       ├── ast.py
 │       ├── parser.py
+│       ├── grounder.py
 │       └── errors.py
 │
 ├── visualization/
@@ -214,19 +215,9 @@ kplan/
 └── docs/
 ```
 
-## PDDL support (experimental)
+## PDDL Support (Work in Progress)
 
-The project includes an experimental PDDL-FOND parsing layer.
-
-This module allows loading domains and problems written in PDDL,
-using a strict internal representation aligned with kplan’s semantics.
-
-Key characteristics:
-
-- strict separation between external parser and internal AST
-- deterministic normalization of effects (all actions become `oneof`)
-- explicit rejection of unsupported PDDL features
-- no external types leak into the core system
+The project includes an initial PDDL integration layer for defining planning problems externally.
 
 Current scope:
 
@@ -235,14 +226,17 @@ Current scope:
 - deterministic normalization of effects (all actions use `oneof`)
 - explicit rejection of unsupported PDDL features
 - no external parser types leak into the internal model
+- integration with the solver via a PDDLProblem adapter
 
 Not implemented yet:
 
-- Problem adapter (PDDL → core.problem.Problem)
-- solver execution from PDDL inputs
+- advanced Problem-level optimizations
 - CLI entry point
+- full PDDL feature coverage
 
-The module is now a validated and grounded PDDL front-end, but not yet an executable backend.
+The module is now a validated and grounded PDDL front-end,
+with a working adapter to the solver, but not yet a complete
+PDDL execution environment.
 
 See:
 
