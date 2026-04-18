@@ -1,0 +1,5 @@
+(define (problem bad-init-arity)
+  (:domain det-toy)
+  (:objects a - block)
+  (:init (clear a) (holding a a) (handempty))
+  (:goal (holding a)))

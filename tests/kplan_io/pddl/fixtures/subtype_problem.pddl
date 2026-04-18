@@ -1,0 +1,5 @@
+(define (problem subtype-test-1)
+  (:domain subtype-test)
+  (:objects rex - dog whiskers - cat)
+  (:init (friendly rex) (friendly whiskers))
+  (:goal (and (adopted rex) (adopted whiskers))))

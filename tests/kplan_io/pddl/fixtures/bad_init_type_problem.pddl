@@ -1,0 +1,5 @@
+(define (problem bad-init-type-1)
+  (:domain bad-init-type)
+  (:objects apple - fruit truck - vehicle)
+  (:init (ripe truck))
+  (:goal (ripe apple)))

@@ -1,0 +1,5 @@
+(define (problem bad-action-type-1)
+  (:domain bad-action-type)
+  (:objects truck - vehicle apple - fruit)
+  (:init (parked truck) (ripe apple))
+  (:goal (ripe apple)))

@@ -1,0 +1,5 @@
+(define (problem empty-type-1)
+  (:domain empty-type)
+  (:objects hammer - tool)
+  (:init (useful hammer))
+  (:goal (useful hammer)))
