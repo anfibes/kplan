@@ -20,7 +20,7 @@ from typing import Any
 # The `pddl` package ships without a py.typed marker, so each first-import
 # from one of its submodules carries an `# type: ignore[import-untyped]`.
 from pddl import parse_domain as _ext_parse_domain  # type: ignore[import-untyped]
-from pddl import parse_problem as _ext_parse_problem  # type: ignore[import-untyped]
+from pddl import parse_problem as _ext_parse_problem
 from pddl.action import Action as _ExtAction  # type: ignore[import-untyped]
 from pddl.core import Domain as _ExtDomain  # type: ignore[import-untyped]
 from pddl.core import Problem as _ExtProblem

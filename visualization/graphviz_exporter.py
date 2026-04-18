@@ -20,6 +20,7 @@ class GraphvizExporter(Generic[StateT, ActionT]):
         mode: GraphMode = "full_graph",
         simplify_action_labels: bool = True,
         highlight_bad_outcomes: bool = True,
+        show_goal_distance: bool = False,
         title: str | None = None,
         show_legend: bool = False,
         requested_k: int | None = None,
@@ -27,10 +28,10 @@ class GraphvizExporter(Generic[StateT, ActionT]):
     ) -> None:
         if mode not in {"full_graph", "policy_only"}:
             raise ValueError("mode must be 'full_graph' or 'policy_only'.")
-
         self._mode = mode
         self._simplify_action_labels = simplify_action_labels
         self._highlight_bad_outcomes = highlight_bad_outcomes
+        self.show_goal_distance = show_goal_distance
         self._title = title
         self._show_legend = show_legend
         self._requested_k = requested_k
@@ -270,13 +271,21 @@ class GraphvizExporter(Generic[StateT, ActionT]):
         is_goal: bool,
     ) -> str:
         state_repr = self._profile.state_repr(state)
-        goal_distance = solver.goal_distance_of(state)
-        distance_label = "∞" if goal_distance is None else str(goal_distance)
 
         if is_goal:
-            return f"{state_repr}\\nGOAL\\nk=∞\\nd={distance_label}"
+            label = f"{state_repr}\\nGOAL\\nk=∞"
+        else:
+            label = f"{state_repr}\\nk={k_value}"
 
-        return f"{state_repr}\\nk={k_value}\\nd={distance_label}"
+        if self.show_goal_distance:
+        # If enabled, append d=... to node labels, where d is the minimum
+        # topological distance from the nearest goal computed via backward BFS.
+        # This is a debug/analysis aid only: it is not a domain progress metric.
+            goal_distance = solver.goal_distance_of(state)
+            distance_label = "∞" if goal_distance is None else str(goal_distance)
+            label += f"\\nd={distance_label}"
+
+        return label
 
     def _node_attributes(
         self,

@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .vscode/
 .idea/
+.local-docs/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
