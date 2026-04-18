@@ -27,8 +27,9 @@ At the current stage, the implemented scope is:
     • grounding ActionSchema into GroundAction
     • validating grounded actions and initial state
     • deterministic grounding output
-    • exposing the problem via a Problem adapter (PDDLProblem)
-    • testing parser and grounding behavior
+    • exposing grounded problems via a Problem adapter (PDDLProblem)
+    • basic integration with KPlanSolver
+    • testing parser, grounding and adapter behavior
 
 Not yet implemented:
 
@@ -37,7 +38,8 @@ Not yet implemented:
     • full PDDL feature coverage
 
 This distinction is essential.
-The current module is a parser layer, not yet a full execution layer.
+The current module is a grounded and solver-integrated PDDL front-end,
+but not yet a full end-user execution environment.
 
 ⸻
 
@@ -71,7 +73,7 @@ This is intentionally outside:
 
 The dependency direction is:
 
-PDDL files → kplan_io/pddl → internal AST → future adapter → core interfaces
+PDDL files → kplan_io/pddl → internal AST → grounding → Problem adapter → core interfaces
 
 This preserves the existing kplan structure:
 
@@ -168,8 +170,11 @@ kplan_io/pddl/problem.py
 Tests currently live in:
 
 tests/kplan_io/pddl/test_parser.py
+tests/kplan_io/pddl/test_grounder.py
+tests/kplan_io/pddl/test_problem.py
 
-The current implementation is centered on parsing, grounding and validation.
+The current implementation is centered on parsing, grounding, validation
+and solver-facing adaptation.
 
 ⸻
 
@@ -212,7 +217,8 @@ ActionSchema
         • effect
 
 GroundAction
-    Present in the AST surface already, but not yet produced by the current implementation.
+    Fully grounded action produced by the grounding phase and consumed
+    by the PDDLProblem adapter.
 
 ParsedDomain
     Internal representation of a parsed domain.
@@ -465,7 +471,13 @@ Adapter tests validate:
     • action applicability filtering
     • successor generation for deterministic and oneof actions
     • goal evaluation
-    • integration with KPlanSolver
+    • basic integration with KPlanSolver
+
+What the tests do not yet prove:
+
+    • large-scale performance scenarios
+    • benchmark-scale end-to-end evaluation
+    • advanced planning heuristics
 
 Not yet covered:
 
@@ -493,8 +505,9 @@ as a set of possible successors.
 
 Important clarification:
 
-    • the current solver does not yet consume the PDDL module directly
-    • the semantic alignment is architectural, not yet operational
+    • the current solver consumes the PDDL module through the PDDLProblem adapter
+    • the semantic alignment is now both architectural and operational at a basic level
+    • no nominal/adverse branch distinction is currently encoded
 
 ⸻
 
@@ -530,13 +543,13 @@ Stage 4
 
 Stage 5
     CLI and benchmark workflow
-    Load domain/problem files and run experiments directly from PDDL inputs.
+    Status: not implemented
 
 This sequence reflects the intended implementation order.
 
 ⸻
 
-22. Planned grounding model
+22. Grounding model
 
 The grounding phase is implemented as:
 
@@ -563,26 +576,32 @@ This keeps the runtime execution model simple.
 
 ⸻
 
-23. Planned Problem adapter
+23. Problem adapter
 
-After grounding, the PDDL module is expected to provide an adapter that
-implements the existing Problem protocol used by kplan.
+The PDDL module provides an adapter that implements the existing Problem
+protocol used by kplan.
 
-Target mapping:
+Current mapping:
 
-    initial_state()      → PDDLState
+    initial_state()      → validated PDDLState from the grounder
     get_actions(state)   → applicable GroundAction set
     get_successors(...)  → successor PDDLState set
     is_goal(state)       → goal satisfaction check
 
-This is the step that will make PDDL operationally compatible with
-KPlanSolver.
+The adapter does not perform parsing or grounding itself.
+It consumes the output of the parser and grounder, and exposes the problem
+to KPlanSolver using the existing core.problem.Problem interface.
 
-This adapter does not exist yet.
+Current behavior:
+
+    • applicability is evaluated using grounded positive/negative literals
+    • every OneOfEffect branch becomes one possible successor
+    • no branch is privileged as nominal
+    • the adapter remains simple and deterministic
 
 ⸻
 
-24. Planned complexity tradeoff
+24. Current complexity tradeoff
 
 The planned grounding strategy is eager.
 
@@ -641,13 +660,16 @@ The current PDDL module provides:
     • eager grounding of ActionSchema into GroundAction
     • validation of grounded actions and initial state
     • a Problem adapter (PDDLProblem) compatible with the solver
+    • basic operational integration with KPlanSolver
 
 It does not yet provide:
 
     • CLI support
     • advanced optimizations
     • full PDDL coverage
+    • benchmark-oriented workflow tooling
 
 At the current stage, the module should be understood as:
 
-    a grounded and solver-integrated PDDL front-end for kplan
+    a grounded and solver-integrated PDDL front-end for kplan,
+    suitable for restricted PDDL-FOND problems through the Python API

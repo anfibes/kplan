@@ -194,6 +194,7 @@ kplan/
 │       ├── ast.py
 │       ├── parser.py
 │       ├── grounder.py
+│       ├── problem.py
 │       └── errors.py
 │
 ├── visualization/
