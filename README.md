@@ -231,17 +231,18 @@ Key characteristics:
 Current scope:
 
 - parsing and validation of a restricted PDDL subset
-- support for:
-  - typing
-  - negative preconditions
-  - non-deterministic effects (`oneof`)
-- normalization of effects into a unified internal structure
+- grounding of ActionSchema into GroundAction (eager, type-aware)
+- deterministic normalization of effects (all actions use `oneof`)
+- explicit rejection of unsupported PDDL features
+- no external parser types leak into the internal model
 
 Not implemented yet:
 
-- grounding (ActionSchema → GroundAction)
-- direct execution via CLI
-- integration with solver (planned next steps)
+- Problem adapter (PDDL → core.problem.Problem)
+- solver execution from PDDL inputs
+- CLI entry point
+
+The module is now a validated and grounded PDDL front-end, but not yet an executable backend.
 
 See:
 

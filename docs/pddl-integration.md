@@ -24,11 +24,13 @@ At the current stage, the implemented scope is:
     • parsing PDDL problem files
     • validating a restricted PDDL subset
     • converting external parser objects into an internal AST
-    • testing parser behavior and parser invariants
+    • grounding ActionSchema into GroundAction
+    • validating grounded actions and initial state
+    • deterministic grounding output
+    • testing parser and grounding behavior
 
 Not yet implemented:
 
-    • grounding
     • Problem adapter
     • solver execution from PDDL
     • CLI entry point
@@ -156,11 +158,15 @@ kplan_io/pddl/ast.py
 kplan_io/pddl/parser.py
     External parser boundary and conversion logic.
 
+kplan_io/pddl/grounder.py
+    Eager grounding layer: converts ActionSchema into GroundAction
+    using typed object substitution and validation.
+
 Tests currently live in:
 
 tests/kplan_io/pddl/test_parser.py
 
-The current implementation is therefore centered on parsing and validation.
+The current implementation is centered on parsing, grounding and validation.
 
 ⸻
 
@@ -215,28 +221,24 @@ ParsedProblem
 
 9. Important note about grounding
 
-At the current stage, the parser is symbolic.
+The module now includes an explicit grounding phase.
 
 This means:
 
-    • problem init atoms are already concrete atoms from the problem file
-    • action schemas still contain variables
-    • effects in ActionSchema are symbolic, not grounded
+    • parser output (ActionSchema) is symbolic
+    • grounding produces fully concrete GroundAction
+    • initial state is validated and represented as PDDLState
 
-So the current module does not yet support direct execution of actions.
+After grounding:
 
-Example:
+    • no variables remain in actions
+    • all preconditions and effects are fully instantiated
+    • the module is ready for Problem-level integration
 
-An action schema may still contain:
+However:
 
-    holding(?b)
-
-not:
-
-    holding(a)
-
-This is expected at this stage.
-Grounding is the next major step.
+    • the module still does not execute actions
+    • applicability and successor generation are not yet implemented
 
 ⸻
 
@@ -438,31 +440,33 @@ Determinism is part of the module design, not just a testing convenience.
 
 18. What the current tests actually prove
 
-The current test suite is focused on parser behavior.
+The current test suite now covers both parser and grounding behavior.
 
 It validates:
 
-    • successful parsing of a deterministic toy domain
-    • successful parsing of a toy FOND domain
-    • normalization of deterministic effects
-    • normalization of oneof effects
-    • distribution of deterministic literals into oneof branches
+    • successful parsing of deterministic and FOND domains
+    • normalization of deterministic and oneof effects
     • rejection of unsupported features
-    • rejection of branch add/delete conflicts
-    • propagation of FileNotFoundError
-    • parser-output determinism
+    • deterministic parser output
     • absence of external parser types in returned objects
-    • basic PDDLState helper behavior
-    • requirement mismatch handling for oneof without :non-deterministic
+
+Grounding tests validate:
+
+    • deterministic grounding of ActionSchema
+    • subtype assignability
+    • zero-parameter actions
+    • empty type → zero grounded actions
+    • validation of initial state (arity, unknown object, type mismatch)
+    • validation of grounded actions (predicate typing compatibility)
+    • correct grounding of oneof branches
+    • deterministic ordering of grounded actions
 
 What the tests do not yet prove:
 
-    • grounding correctness
-    • goal evaluation inside a Problem adapter
-    • solver integration from PDDL inputs
-    • end-to-end execution of PDDL domains
-
-This distinction should remain explicit.
+    • applicability filtering (state-dependent)
+    • successor generation
+    • goal evaluation
+    • solver execution from PDDL inputs
 
 ⸻
 
@@ -494,11 +498,8 @@ Important clarification:
 
 The following pieces do not exist yet in executable form:
 
-    • grounding of ActionSchema into GroundAction
-    • typed object substitution
-    • precondition instantiation
-    • effect instantiation
-    • PDDLProblem implementing core.problem.Problem
+    • Problem adapter implementing core.problem.Problem
+    • applicability filtering based on preconditions
     • successor generation from grounded actions
     • goal evaluation in solver-facing form
     • command-line execution of PDDL problems
@@ -517,7 +518,7 @@ Stage 1
 
 Stage 2
     Grounding
-    Convert ActionSchema into GroundAction by substituting variables with compatible objects.
+    Status: implemented
 
 Stage 3
     Problem adapter
@@ -537,7 +538,7 @@ This sequence reflects the intended implementation order.
 
 22. Planned grounding model
 
-The grounding phase is planned as:
+The grounding phase is implemented as:
 
     • eager
     • deterministic
@@ -637,18 +638,19 @@ The current PDDL module provides:
     • normalized representation of preconditions and effects
     • explicit rejection of unsupported syntax
     • deterministic parser output
-    • parser-focused test coverage
+    • eager grounding of ActionSchema into GroundAction
+    • validation of grounded actions and initial state
+    • parser and grounding test coverage
 
 It does not yet provide:
 
-    • grounding
     • Problem integration
     • solver execution
     • CLI support
 
 So, at the current stage, the module should be understood as:
 
-    a validated symbolic PDDL front-end for kplan
+    a validated and grounded PDDL front-end for kplan
 
 not yet a complete executable PDDL backend.
 
